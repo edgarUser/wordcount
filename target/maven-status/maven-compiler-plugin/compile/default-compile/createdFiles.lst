@@ -1,1 +1,3 @@
-com/mx/project/App.class
+com/mx/project/WordCountMapper.class
+com/mx/project/WordCount.class
+com/mx/project/WordCountReducer.class
