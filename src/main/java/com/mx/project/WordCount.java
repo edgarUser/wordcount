@@ -5,7 +5,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.OutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
@@ -14,8 +13,27 @@ import org.apache.hadoop.util.ToolRunner;
 public class WordCount extends Configured implements Tool {
 
 	public static void main(String[] args) throws Exception {
+
+		/* Basic configuration on main method
+		 * Job job = new Job(); job.setJarByClass(WordCount.class);
+		 * job.setJobName("WordCount");
+		 * 
+		 * FileInputFormat.addInputPath(job, new Path(args[0]));
+		 * FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		 * 
+		 * job.setOutputKeyClass(Text.class);
+		 * job.setOutputValueClass(IntWritable.class); //
+		 * job.setOutputFormatClass(OutputFormat.class);
+		 * job.setMapperClass(WordCountMapper.class);
+		 * job.setCombinerClass(WordCountReducer.class);
+		 * job.setReducerClass(WordCountReducer.class);
+		 * 
+		 * System.exit(job.waitForCompletion(true) ? 0 : 1);
+		 */
+
 		int exitCode = ToolRunner.run(new WordCount(), args);
 		System.exit(exitCode);
+
 	}
 
 	@Override
@@ -35,12 +53,14 @@ public class WordCount extends Configured implements Tool {
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
-		job.setOutputFormatClass(OutputFormat.class);
+		// job.setOutputFormatClass(OutputFormat.class); doesn't works
 		job.setMapperClass(WordCountMapper.class);
+		job.setCombinerClass(WordCountReducer.class);
 		job.setReducerClass(WordCountReducer.class);
+
 		int returnValue = job.waitForCompletion(true) ? 0 : 1;
 		System.out.println("job.isSuccessful " + job.isSuccessful());
 		return returnValue;
-	}
 
+	}
 }
